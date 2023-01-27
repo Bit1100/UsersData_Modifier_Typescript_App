@@ -1,7 +1,7 @@
 export const data = [
   {
-    id: 1,
-    name: "John",
+    id: "1",
+    fullName: "John",
     emailId: "john@companyname.com",
     aadharNumber: "3653782476",
     panNumber: "R05HKI2BHY",
@@ -9,8 +9,8 @@ export const data = [
     joiningDate: "18-02-2019",
   },
   {
-    id: 2,
-    name: "Gulnar",
+    id: "2",
+    fullName: "Gulnar",
     emailId: "gulnar@companyname.com",
     aadharNumber: "5864636979",
     panNumber: "JU3XUBVXFI",
@@ -18,8 +18,8 @@ export const data = [
     joiningDate: "09-04-2019",
   },
   {
-    id: 3,
-    name: "Maxene",
+    id: "3",
+    fullName: "Maxene",
     emailId: "maxene@companyname.com",
     aadharNumber: "4439662981",
     panNumber: "ZSIW4XGXWX",
@@ -27,8 +27,8 @@ export const data = [
     joiningDate: "04-06-2019",
   },
   {
-    id: 4,
-    name: "Joanna",
+    id: "4",
+    fullName: "Joanna",
     emailId: "joanna@companyname.com",
     aadharNumber: "8992106113",
     panNumber: "TRQ5GOSEKQ",
