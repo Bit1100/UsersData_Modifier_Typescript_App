@@ -1,4 +1,5 @@
 import { useUsers } from "../context";
+import { useRef, useEffect } from "react";
 import useInput from "../hooks/userInput";
 import {
   NAME_PATTERN,
@@ -10,6 +11,7 @@ import { user } from "../types";
 import { useErrorHandler } from "react-error-boundary";
 
 const Form = () => {
+  const fullNameRef = useRef<HTMLInputElement>(null!);
   const handleError = useErrorHandler();
   const {
     state: { users, formUser, error, modalState },
@@ -29,6 +31,7 @@ const Form = () => {
   );
   const {
     value: employeeType,
+    setValue,
     bind: bindEmployeeType,
     reset: resetEmployeeType,
   } = useInput(formUser["employeeType"]);
@@ -36,6 +39,7 @@ const Form = () => {
     formUser["joiningDate"]
   );
 
+  // Reset the Form Fields
   const resetLocalState = () => {
     resetId();
     resetName();
@@ -176,8 +180,12 @@ const Form = () => {
           });
         }
 
+        //Set Employee Type
+        updateUser.employeeType = employeeType.value;
+
         // Replace the old value by new if updated
         _users.splice(updateUserIndex, 1, updateUser);
+
         dispatch({
           type: "SET_USERS",
           payload: _users,
@@ -190,12 +198,17 @@ const Form = () => {
           type: "SET_MODAL",
           payload: false,
         });
+
         resetLocalState();
       }
     } catch (err) {
       handleError(err);
     }
   };
+
+  useEffect(() => {
+    fullNameRef.current.focus();
+  }, []);
 
   return formUser &&
     Object.keys(formUser).length === 0 &&
@@ -214,6 +227,7 @@ const Form = () => {
         <div className="form-control">
           <label htmlFor="FullName">FullName</label>
           <input
+            ref={fullNameRef}
             name="fullName"
             type="text"
             id="FullName"
@@ -262,7 +276,8 @@ const Form = () => {
               type="radio"
               name="employeeType"
               checked={employeeType === "Full-Time"}
-              {...bindEmployeeType}
+              value="Full-Time"
+              onChange={(e) => setValue(e.target.value)}
             />
             <span>Full-time</span>
           </div>
@@ -272,7 +287,8 @@ const Form = () => {
               type="radio"
               name="employeeType"
               checked={employeeType === "Part-Time"}
-              {...bindEmployeeType}
+              value="Part-Time"
+              onChange={(e) => setValue(e.target.value)}
             />
             <span>Part-time</span>
           </div>

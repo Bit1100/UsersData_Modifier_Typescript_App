@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// Custom Hook - Short but Powerful Way to handle form data
 const UserInput = (initialValue = "") => {
   const [value, setValue] = useState(initialValue);
 
