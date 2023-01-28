@@ -103,9 +103,21 @@ $smooth: all 0.3s ease-in-out;
   margin: 2rem auto 4rem auto;
 }
 
+// Error Container and Heading
+.error-container {
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.error-heading {
+  margin-bottom: 3rem;
+  font-size: 2.3rem;
+}
+
 // Container
 .container {
   margin: 0 auto;
+  min-height: 100vh;
 }
 
 @media (min-width: 768px) {

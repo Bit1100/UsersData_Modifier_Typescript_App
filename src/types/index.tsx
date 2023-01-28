@@ -51,3 +51,8 @@ export type usersContextType = {
   state: usersState;
   dispatch: React.Dispatch<actionState>;
 };
+
+export type Fallback = {
+  error: { message: string };
+  resetErrorBoundary: () => void;
+};

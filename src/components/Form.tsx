@@ -7,8 +7,10 @@ import {
   PANNO_PATTERN,
 } from "../constants";
 import { user } from "../types";
+import { useErrorHandler } from "react-error-boundary";
 
 const Form = () => {
+  const handleError = useErrorHandler();
   const {
     state: { users, formUser, error, modalState },
     dispatch,
@@ -45,150 +47,153 @@ const Form = () => {
   };
 
   // Update the users in the table after form validation
-  const updateUsers = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    try {
+      e.preventDefault();
+      const { fullName, email, aadharNo, panNo, employeeType, joiningDate } =
+        e.currentTarget;
 
-    const { fullName, email, aadharNo, panNo, employeeType, joiningDate } =
-      e.currentTarget;
+      const _users = [...users];
 
-    const _users = [...users];
+      const updateUser: user | undefined = _users.find(
+        (item) => +item.id === +id
+      );
+      const updateUserIndex: number = _users.findIndex(
+        (item) => +item.id === +id
+      );
 
-    const updateUser: user | undefined = _users.find(
-      (item) => +item.id === +id
-    );
-    const updateUserIndex: number = _users.findIndex(
-      (item) => +item.id === +id
-    );
+      /* Update the user if any*/
+      if (!!updateUser) {
+        // Form Validation
+        /* Check for Empty Fields */
+        if (
+          !fullName.value.trim() ||
+          !email.value.trim() ||
+          !aadharNo.value.trim() ||
+          !panNo.value.trim() ||
+          !employeeType.value.trim() ||
+          !joiningDate.value.trim()
+        ) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "All Fields Required", errStatus: true },
+          });
+          return;
+        } else {
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
 
-    /* Update the user if any*/
-    if (!!updateUser) {
-      // Form Validation
-      /* Check for Empty Fields */
-      if (
-        !fullName.value.trim() ||
-        !email.value.trim() ||
-        !aadharNo.value.trim() ||
-        !panNo.value.trim() ||
-        !employeeType.value.trim() ||
-        !joiningDate.value.trim()
-      ) {
+        /* Name Validation */
+        if (!NAME_PATTERN.test(fullName.value.trim())) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              message: "Name must be at least 3 and at most 10 characters long",
+              errStatus: true,
+            },
+          });
+          return;
+        } else {
+          updateUser.fullName = fullName.value;
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
+
+        /* Email Validation */
+        if (!EMAIL_PATTERN.test(email.value.trim())) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              message: "Invalid E-mail",
+              errStatus: true,
+            },
+          });
+          return;
+        } else {
+          updateUser.emailId = email.value;
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
+
+        /* Aadhar Validation */
+        if (aadharNo.value.length !== 10) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              message: "Invalid Aadhar Nunber",
+              errStatus: true,
+            },
+          });
+          return;
+        } else {
+          updateUser.aadharNumber = aadharNo.value;
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
+
+        /* PAN Card Validation */
+        if (!PANNO_PATTERN.test(panNo.value.trim())) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              message: "Invalid PAN Number",
+              errStatus: true,
+            },
+          });
+          return;
+        } else {
+          updateUser.panNumber = panNo.value;
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
+
+        /* Joining Date Validation */
+        if (!JOININGDATE_PATTERN.test(joiningDate.value)) {
+          dispatch({
+            type: "SET_ERROR",
+            payload: {
+              message: "Invalid Date Format",
+              errStatus: true,
+            },
+          });
+          return;
+        } else {
+          updateUser.joiningDate = joiningDate.value;
+          dispatch({
+            type: "SET_ERROR",
+            payload: { message: "", errStatus: false },
+          });
+        }
+
+        // Replace the old value by new if updated
+        _users.splice(updateUserIndex, 1, updateUser);
         dispatch({
-          type: "SET_ERROR",
-          payload: { message: "All Fields Required", errStatus: true },
+          type: "SET_USERS",
+          payload: _users,
         });
-        return;
-      } else {
         dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
+          type: "GET_USER",
+          payload: Object.create({}),
         });
+        dispatch({
+          type: "SET_MODAL",
+          payload: false,
+        });
+        resetLocalState();
       }
-
-      /* Name Validation */
-      if (!NAME_PATTERN.test(fullName.value.trim())) {
-        dispatch({
-          type: "SET_ERROR",
-          payload: {
-            message: "Name must be at least 3 and at most 10 characters long",
-            errStatus: true,
-          },
-        });
-        return;
-      } else {
-        updateUser.fullName = fullName.value;
-        dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
-        });
-      }
-
-      /* Email Validation */
-      if (!EMAIL_PATTERN.test(email.value.trim())) {
-        dispatch({
-          type: "SET_ERROR",
-          payload: {
-            message: "Invalid E-mail",
-            errStatus: true,
-          },
-        });
-        return;
-      } else {
-        updateUser.emailId = email.value;
-        dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
-        });
-      }
-
-      /* Aadhar Validation */
-      if (aadharNo.value.length !== 10) {
-        dispatch({
-          type: "SET_ERROR",
-          payload: {
-            message: "Invalid Aadhar Nunber",
-            errStatus: true,
-          },
-        });
-        return;
-      } else {
-        updateUser.aadharNumber = aadharNo.value;
-        dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
-        });
-      }
-
-      /* PAN Card Validation */
-      if (!PANNO_PATTERN.test(panNo.value.trim())) {
-        dispatch({
-          type: "SET_ERROR",
-          payload: {
-            message: "Invalid PAN Number",
-            errStatus: true,
-          },
-        });
-        return;
-      } else {
-        updateUser.panNumber = panNo.value;
-        dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
-        });
-      }
-
-      /* Joining Date Validation */
-      if (!JOININGDATE_PATTERN.test(joiningDate.value)) {
-        dispatch({
-          type: "SET_ERROR",
-          payload: {
-            message: "Invalid Date Format",
-            errStatus: true,
-          },
-        });
-        return;
-      } else {
-        updateUser.joiningDate = joiningDate.value;
-        dispatch({
-          type: "SET_ERROR",
-          payload: { message: "", errStatus: false },
-        });
-      }
-
-      // Replace the old value by new if updated
-      _users.splice(updateUserIndex, 1, updateUser);
-      dispatch({
-        type: "SET_USERS",
-        payload: _users,
-      });
-      dispatch({
-        type: "GET_USER",
-        payload: Object.create({}),
-      });
-      dispatch({
-        type: "SET_MODAL",
-        payload: false,
-      });
-      resetLocalState();
+    } catch (err) {
+      handleError(err);
     }
   };
 
@@ -199,7 +204,7 @@ const Form = () => {
     <></>
   ) : (
     <div className="form-wrapper">
-      <form onSubmit={updateUsers} className="form flex flex-col items-center">
+      <form onSubmit={handleSubmit} className="form flex flex-col items-center">
         {error.errStatus ? <p className="form-error">{error.message}</p> : ""}
         <div className="form-control">
           <label htmlFor="id">ID</label>
