@@ -1,58 +1,6 @@
 import { createContext, useContext, useReducer, useMemo } from "react";
 
-type Children = {
-  children: React.ReactNode;
-};
-
-export type user = {
-  id: string;
-  fullName: string;
-  emailId: string;
-  aadharNumber: string;
-  panNumber: string;
-  employeeType: string;
-  joiningDate: string;
-};
-
-type errorState = {
-  message: string;
-  errStatus: boolean;
-};
-
-type usersState = {
-  users: user[];
-  formUser: user;
-  error: errorState;
-  modalState: boolean;
-};
-
-type users = {
-  type: "SET_USERS";
-  payload: user[];
-};
-
-type formUser = {
-  type: "GET_USER";
-  payload: user;
-};
-
-type modal = {
-  type: "SET_MODAL";
-  payload: boolean;
-};
-
-type error = {
-  type: "SET_ERROR";
-  payload: errorState;
-};
-
-// Discriminated Union Typing
-type actionState = users | formUser | modal | error;
-
-type usersContextType = {
-  state: usersState;
-  dispatch: React.Dispatch<actionState>;
-};
+import { Children, usersState, actionState, usersContextType } from "../types";
 
 const UsersContext = createContext<usersContextType | null>(null);
 
@@ -79,8 +27,9 @@ const reducer = (state: usersState, action: actionState): usersState => {
 };
 
 export const UsersContextProvider = ({ children }: Children) => {
+  // Initial Data
   const initialState: usersState = {
-    users: [],
+    users: [], //Your updated data is safe in LocalStorage
     formUser: Object.create({}),
     error: { message: "", errStatus: false },
     modalState: false,

@@ -1,4 +1,4 @@
-import { useUsers, user } from "../context";
+import { useUsers } from "../context";
 import useInput from "../hooks/userInput";
 import {
   NAME_PATTERN,
@@ -6,10 +6,11 @@ import {
   JOININGDATE_PATTERN,
   PANNO_PATTERN,
 } from "../constants";
+import { user } from "../types";
 
 const Form = () => {
   const {
-    state: { users, formUser, error },
+    state: { users, formUser, error, modalState },
     dispatch,
   } = useUsers();
 
@@ -173,8 +174,6 @@ const Form = () => {
         });
       }
 
-      console.log("Reached");
-
       // Replace the old value by new if updated
       _users.splice(updateUserIndex, 1, updateUser);
       dispatch({
@@ -195,10 +194,11 @@ const Form = () => {
 
   return formUser &&
     Object.keys(formUser).length === 0 &&
-    formUser.constructor === Object ? (
+    formUser.constructor === Object &&
+    !modalState ? (
     <></>
   ) : (
-    <div className="container">
+    <div className="form-wrapper">
       <form onSubmit={updateUsers} className="form flex flex-col items-center">
         {error.errStatus ? <p className="form-error">{error.message}</p> : ""}
         <div className="form-control">

@@ -19,7 +19,6 @@ const TabularData = () => {
             <th>Employee Type</th>
             <th>Joining Date</th>
             <th>EDIT</th>
-            <th>Edit MODEL</th>
           </tr>
         </thead>
         <tbody>
@@ -50,23 +49,6 @@ const TabularData = () => {
                         payload: { message: "", errStatus: false },
                       });
                       dispatch({
-                        type: "GET_USER",
-                        payload: user,
-                      });
-                    }}
-                    className="btn btn-primary"
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      dispatch({
-                        type: "SET_ERROR",
-                        payload: { message: "", errStatus: false },
-                      });
-                      dispatch({
                         type: "SET_MODAL",
                         payload: true,
                       });
@@ -77,7 +59,7 @@ const TabularData = () => {
                     }}
                     className="btn btn-primary"
                   >
-                    MEdit
+                    Edit
                   </button>
                 </td>
               </tr>
