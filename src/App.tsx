@@ -9,6 +9,7 @@ import { data } from "./data";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/Error";
 
+// Main Component
 const App = () => {
   const {
     state: { users },
@@ -18,7 +19,7 @@ const App = () => {
   // Set amd then get users data into/to localStorage and populate users in store for the first time only
   useEffect(() => {
     dispatch({ type: "SET_USERS", payload: data });
-  }, []);
+  }, [dispatch]);
 
   // Get users from localstorage & Update users into store
   useEffect(() => {
