@@ -10,6 +10,7 @@ import {
 import { user } from "../types";
 import { useErrorHandler } from "react-error-boundary";
 
+// Form Component
 const Form = () => {
   const fullNameRef = useRef<HTMLInputElement>(null!);
   const handleError = useErrorHandler();
@@ -32,7 +33,6 @@ const Form = () => {
   const {
     value: employeeType,
     setValue,
-    bind: bindEmployeeType,
     reset: resetEmployeeType,
   } = useInput(formUser["employeeType"]);
   const { bind: bindJoiningDate, reset: resetJoiningDate } = useInput(
